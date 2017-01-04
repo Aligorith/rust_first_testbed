@@ -26,14 +26,14 @@ fn show_prompt(prompt_str: &str) {
 }
 
 // TODO: Allow extra restrictions about positive/negative
-fn get_int() -> i64 {
-	let mut raw_input = String::new();
-	
-	println!("Please enter an integer:");
+fn get_int(prompt_str: &str) -> i64 {
+	println!("{0}", prompt_str);
 	show_prompt("# ");
 	
 	/* NOTE: Use "loop" for infinite loops; Using "while" for this will complain about needing an int? */
 	loop {
+		let mut raw_input = String::new();
+		
 		io::stdin().read_line(&mut raw_input)
 			.expect("Please enter a number...");
 		
@@ -68,7 +68,7 @@ fn is_prime(x: i64) -> bool {
 }
 
 fn is_prime_test() {
-	let value = get_int();
+	let value = get_int("Please enter a postive integer:");
 	
 	match is_prime(value) {
 		true  => println!("{0} is Prime", value),
@@ -80,8 +80,27 @@ fn is_prime_test() {
 
 
 fn fizzbuzz() {
-	println!("!Fizzbuzz");
+	let stop = get_int("Please enter a positive integer:");
+	let mut n = 0;  // counter
+	
+	while n < stop {
+		if n % 15 == 0 {
+			println!("fizzbuzz");
+		}
+		else if (n % 3) == 0 {
+			println!("fizz");
+		}
+		else if (n % 5) == 0 {
+			println!("buzz");
+		}
+		else {
+			println!("{}", n);
+		}
+		n += 1;
+	}
 }
+
+
 
 
 fn main() {
