@@ -1,4 +1,4 @@
-use std::io;
+use std::io::{self, Write};
 
 fn range_summing_test() {
 	let fac = 0.5;      // immutable constant
@@ -30,7 +30,9 @@ fn is_prime(x: i64) -> bool {
 fn is_prime_test() {
 	let mut raw_input = String::new();
 	
-	println!("Please enter an integer:");
+	print!("Please enter an integer:");
+	io::stdout().flush().unwrap(); // stdout is buffered
+	
 	io::stdin().read_line(&mut raw_input)
 		.expect("Please enter a number...");
 		
@@ -69,7 +71,8 @@ fn main() {
 	
 	
 	// XXX: This only runs once for now, soon it will loop...
-	println!("\n> ");
+	print!("\n> ");
+	io::stdout().flush().unwrap(); // stdout is buffered...
 	
 	let mut command = String::new();
 	
