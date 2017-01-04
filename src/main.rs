@@ -101,16 +101,15 @@ fn handle_command_input(table: &Vec<DemoProgramEntry>) {
 	
 	// Try to treat the input as a number (common case)
 	match command.parse::<usize>() {
-		Ok(value) => {
+		Ok(value) if (value > 0) && (value <= table.len()) => {
 			// We got a number, so treat it as a demo program index
 			let index = value - 1;
-			if (0 <= index) && (index < table.len()) {
-				(table[index as usize].cb)();
-			}
-			else {
-				println!("Unknown command number!");
-			}
+			(table[index].cb)();
 		},
+		Ok(value) => {
+			// We got a number, but it was out of bounds
+			println!("Unknown command number - {0}", value);
+		}
 		Err(_) => {
 			// We got a string, so maybe it was the exit button?
 			match command {
@@ -140,6 +139,7 @@ fn main() {
 		
 		
 		// Get command input, and react to it...
+		// NOTE: We may exit the program from in here
 		handle_command_input(&table);
 		
 		// If still running, add some blank lines to seaprate the output
