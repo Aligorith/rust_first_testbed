@@ -65,35 +65,66 @@ fn fizzbuzz() {
 }
 
 
+// Function pointer/callback type for demo programs used here
+type DemoProgramCallback = fn();
+
+// Wrapper for defining a demo program
+struct DemoProgramEntry {
+	name : String,
+	cb   : DemoProgramCallback, 
+}
 
 
+// Main entrypoint
 fn main() {
+	let table = vec![
+		DemoProgramEntry { name: "range_summing_test()".to_string(),  cb: range_summing_test },
+		DemoProgramEntry { name: "is_prime(x)".to_string(),           cb: is_prime_test },
+		DemoProgramEntry { name: "fizzbuzz(x)".to_string(),           cb: fizzbuzz },
+	];
+	
 	loop {
+		// Print listing of available commands
 		println!("Choose which demo to run:");
-		println!(" 1) range_summing_test()");
-		println!(" 2) is_prime(x)");
-		println!(" 3) fizzbuzz(x)");
+		for (i, item) in table.iter().enumerate() {
+			println!(" {index}) {description}",
+			         index = i + 1,
+			         description = item.name);
+		}
 		println!(" ---");
 		println!(" z/x/exit - To exit");
 		
+		
+		// Get command input, and react to it...
 		terminal_utils::show_prompt("\n> ");
 		
-		let mut command = String::new();
+		let mut raw_input = String::new();
+		io::stdin().read_line(&mut raw_input).expect("Please enter one of the numbers above...");
 		
-		io::stdin().read_line(&mut command)
-			.expect("Please enter one of the numbers above...");
+		let command = raw_input.trim();
 		
-		match command.trim() {
-			"1" => range_summing_test(),
-			"2" => is_prime_test(),
-			"3" => fizzbuzz(),
-			
-			// These two should be the same here - they both exit
-			"e" => break,
-			"z" | "x" | "exit" => process::exit(0),
-			
-			// Catch all unknown commands
-			_   => println!("Unknown command!")
+		match command.parse::<usize>() {
+			Ok(value) => {
+				// We got a number, so treat it as a demo program index
+				let index = value - 1;
+				if (0 <= index) && (index < table.len()) {
+					(table[index as usize].cb)();
+				}
+				else {
+					println!("Unknown command number!");
+				}
+			},
+			Err(e) => {
+				// We got a string, so maybe it was the exit button?
+				match command {
+					// These two should be the same here - they both exit
+					"e" => break,
+					"z" | "x" | "exit" => process::exit(0),
+					
+					// Catch all unknown commands
+					_   => println!("Unknown command!")
+				}
+			}
 		}
 		
 		// If still running, add some blank lines to seaprate the output
