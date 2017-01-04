@@ -65,6 +65,7 @@ fn fizzbuzz() {
 }
 
 
+
 // Function pointer/callback type for demo programs used here
 type DemoProgramCallback = fn();
 
@@ -78,8 +79,8 @@ struct DemoProgramEntry {
 // Helper function: Print demo-command table
 fn print_demo_listing(table: &Vec<DemoProgramEntry>) {
 	println!("Choose which demo to run:");
-		for (i, item) in table.iter().enumerate() {
-			println!(" {index}) {description}",
+	for (i, item) in table.iter().enumerate() {
+		println!(" {index}) {description}",
 		         index = i + 1,
 		         description = item.name);
 	}
