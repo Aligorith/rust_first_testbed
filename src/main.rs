@@ -1,4 +1,5 @@
 use std::io::{self, Write};
+use std::process;
 
 fn range_summing_test() {
 	let fac = 0.5;      // immutable constant
@@ -84,25 +85,35 @@ fn fizzbuzz() {
 
 
 fn main() {
-	println!("Choose which demo to run:");
-	println!(" 1) range_summing_test()");
-	println!(" 2) is_prime(x)");
-	println!(" 3) fizzbuzz(x)");
-	
-	
-	// XXX: This only runs once for now, soon it will loop...
-	print!("\n> ");
-	io::stdout().flush().unwrap(); // stdout is buffered...
-	
-	let mut command = String::new();
-	
-	io::stdin().read_line(&mut command)
-		.expect("Please enter one of the numbers above...");
-	
-	match command.trim() {
-		"1" => range_summing_test(),
-		"2" => is_prime_test(),
-		"3" => fizzbuzz(),
-		_   => println!("Unknown command!")
+	loop {
+		println!("Choose which demo to run:");
+		println!(" 1) range_summing_test()");
+		println!(" 2) is_prime(x)");
+		println!(" 3) fizzbuzz(x)");
+		println!(" ---");
+		println!(" z/x/exit - To exit");
+		
+		show_prompt("\n> ");
+		
+		let mut command = String::new();
+		
+		io::stdin().read_line(&mut command)
+			.expect("Please enter one of the numbers above...");
+		
+		match command.trim() {
+			"1" => range_summing_test(),
+			"2" => is_prime_test(),
+			"3" => fizzbuzz(),
+			
+			// These two should be the same here - they both exit
+			"e" => break,
+			"z" | "x" | "exit" => process::exit(0),
+			
+			// Catch all unknown commands
+			_   => println!("Unknown command!")
+		}
+		
+		// If still running, add some blank lines to seaprate the output
+		println!("\n\n");
 	}
 }
