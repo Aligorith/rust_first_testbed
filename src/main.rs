@@ -111,7 +111,7 @@ fn handle_command_input(table: &Vec<DemoProgramEntry>) {
 				println!("Unknown command number!");
 			}
 		},
-		Err(e) => {
+		Err(_) => {
 			// We got a string, so maybe it was the exit button?
 			match command {
 				// These two should be the same here - they both exit
