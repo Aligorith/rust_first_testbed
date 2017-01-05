@@ -1,3 +1,7 @@
+extern crate time;
+use std::thread;
+use std::time as std_time;
+
 use std::io;
 use std::process;
 
@@ -62,6 +66,44 @@ fn fizzbuzz() {
 		}
 		n += 1;
 	}
+}
+
+
+fn timestamp_to_str(seconds: u64, nanos: u32) -> String {
+	let ms = nanos / 1000000;
+	format!("{0}.{1}", seconds, ms)
+}
+
+
+fn time_formatting() {
+	let ts = time::now();
+	
+	println!("The time now is:");
+	println!(" .to_timespec() -> {:?}", ts.to_timespec()); // seconds from epoch
+	
+	let timespec = ts.to_timespec();
+	println!(" timespec {0}.{1:2}", timespec.sec, timespec.nsec); // seconds from epoch, manually extracted
+	println!(" timespec str = {}",
+	         timestamp_to_str(timespec.sec as u64, 
+	                          timespec.nsec as u32));
+	
+	println!(" .strftime(local) -> {}", ts.strftime("%X").unwrap()); // HH:MM:SS formatted in local system time
+}
+
+
+fn time_elapsed() {
+	let ts = std_time::Instant::now();
+	
+	println!("The starting timestamp is: {:?}", ts);
+	
+	let half_sec = std_time::Duration::from_millis(500);
+	thread::sleep(half_sec);
+	
+	println!("Result after waiting 500ms is: {:?}", ts.elapsed());
+	//println!("  => {:.3}", ts.elapsed().subsec_nanos() / 1000000);
+	println!("  => {} sec", 
+	         timestamp_to_str(ts.elapsed().as_secs(), 
+	                          ts.elapsed().subsec_nanos()));
 }
 
 
@@ -132,6 +174,8 @@ fn main() {
 		DemoProgramEntry { name: "range_summing_test()".to_string(),  cb: range_summing_test },
 		DemoProgramEntry { name: "is_prime(x)".to_string(),           cb: is_prime_test },
 		DemoProgramEntry { name: "fizzbuzz(x)".to_string(),           cb: fizzbuzz },
+		DemoProgramEntry { name: "time_formatting()".to_string(),     cb: time_formatting },
+		DemoProgramEntry { name: "time_elapsed()".to_string(),        cb: time_elapsed },
 	];
 	
 	loop {
