@@ -126,6 +126,21 @@ fn move_semantics_test() {
 	}
 }
 
+/* NOTE: The following code doesn't compile because "x" gets copied, 
+ * since vec's don't implement the Copy trait
+ */
+// fn move_semantics_test2() {
+// 	let x = vec![1, 2, 3];
+// 	let mut y = x;
+	
+// 	y.push(4);
+// 	y.push(5);
+// 	y.pop();
+	
+// 	println!("x = {:?}", x);
+// 	println!("y = {:?}", y);
+// }
+
 /* *********************************************** */
 
 
