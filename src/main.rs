@@ -113,6 +113,21 @@ fn time_elapsed() {
 
 /* *********************************************** */
 
+/* Test of move semantics */
+fn move_semantics_test() {
+	let x = 5;
+	let mut y = x;
+	
+	println!("X = {0}, y = {1}", x, y);
+	while y < 10 {
+		println!("X = {0}, y = {1}", x, y);
+		//y++;
+		y += 1;
+	}
+}
+
+/* *********************************************** */
+
 
 // Main entrypoint
 fn main() {
@@ -122,6 +137,7 @@ fn main() {
 		demo_runner::DemoProgramEntry { name: "fizzbuzz(x)".to_string(),           cb: fizzbuzz },
 		demo_runner::DemoProgramEntry { name: "time_formatting()".to_string(),     cb: time_formatting },
 		demo_runner::DemoProgramEntry { name: "time_elapsed()".to_string(),        cb: time_elapsed },
+		demo_runner::DemoProgramEntry { name: "move_semantics_test()".to_string(), cb: move_semantics_test },
 	];
 	
 	loop {
