@@ -143,6 +143,41 @@ fn move_semantics_test() {
 
 /* *********************************************** */
 
+/* Playing with vecs */
+fn vec_test_1(x : i64) {
+	//let mut v1 = Vec::new(); // XXX: This is not as efficient when we know the size needed
+	//let mut v1 = Vec::with_capacity(x as usize); // XXX: This risks overflow issues...
+	
+	let mut v1 = if x > 1 { 
+					Vec::with_capacity(x as usize) 
+				 }
+				 else { 
+					Vec:: new() 
+				 };
+				 
+	
+	/* 1) Populate the array */
+	for i in 1..x {
+		v1.push(i);
+	}
+	println!("Length of v1 = {0}", v1.len());
+	assert_eq!(v1.len(), (x-1) as usize);
+	
+	/* 2) Try to pop an item off */
+	match v1.pop() {
+		None => println!("Too small to pop"),
+		y    => println!("Length of v1 after {1:?} popped = {0}", v1.len(), y)
+	}
+}
+
+/* Wrapper for vec_test_1 */
+fn vec_test_1_w() {
+	let value = terminal_utils::get_int("Please enter a postive integer:");
+	vec_test_1(value);
+}
+
+/* *********************************************** */
+
 
 // Main entrypoint
 fn main() {
@@ -153,6 +188,7 @@ fn main() {
 		demo_runner::DemoProgramEntry { name: "time_formatting()".to_string(),     cb: time_formatting },
 		demo_runner::DemoProgramEntry { name: "time_elapsed()".to_string(),        cb: time_elapsed },
 		demo_runner::DemoProgramEntry { name: "move_semantics_test()".to_string(), cb: move_semantics_test },
+		demo_runner::DemoProgramEntry { name: "vec_test_1(x)".to_string(),         cb: vec_test_1_w },
 	];
 	
 	loop {
