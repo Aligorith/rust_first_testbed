@@ -178,6 +178,32 @@ fn vec_test_1_w() {
 
 /* *********************************************** */
 
+/* Matching Test Function */
+fn match_test_logic(val : i64) {
+	match val {
+		// ((val % 3) == 0) => println!("Multiple of 3"),
+		// ((val % 5) == 0) => println!("Multiple of 5"),
+		// ((val % 15) == 0) => println!("Multiple of both 3 and 5"),
+		
+		/* "Match Guards" */
+		val if (val % 15 == 0) => println!("Multiple of both 3 and 5"),  /* Note: This must come first, as they're evaluated in order of appearance */
+		val if (val % 3 == 0) => println!("Multiple of 3"),
+		val if (val % 5 == 0) => println!("Multiple of 5"),
+		//val if (val % 15 == 0) => println!("Multiple of both 3 and 5"),
+		
+		_ => println!("{}", val)
+	}
+}
+
+/* Test function for match_test */
+fn match_test() {
+	for i in 1..30 {
+		match_test_logic(i);
+	}
+}
+
+/* *********************************************** */
+
 
 // Main entrypoint
 fn main() {
@@ -189,6 +215,7 @@ fn main() {
 		demo_runner::DemoProgramEntry { name: "time_elapsed()".to_string(),        cb: time_elapsed },
 		demo_runner::DemoProgramEntry { name: "move_semantics_test()".to_string(), cb: move_semantics_test },
 		demo_runner::DemoProgramEntry { name: "vec_test_1(x)".to_string(),         cb: vec_test_1_w },
+		demo_runner::DemoProgramEntry { name: "match_test()".to_string(),          cb: match_test },
 	];
 	
 	loop {
