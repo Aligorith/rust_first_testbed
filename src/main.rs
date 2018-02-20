@@ -1,6 +1,9 @@
 extern crate time;
+extern crate rand;
+
 use std::thread;
 use std::time as std_time;
+use rand::distributions::{IndependentSample, Range};
 
 mod demo_runner;
 mod terminal_utils;
@@ -204,6 +207,101 @@ fn match_test() {
 
 /* *********************************************** */
 
+/* Populate a list/vector with random floats */
+fn make_random_float_array(n: usize, min: f64, max: f64) -> Vec<f64> {
+	let mut result = Vec::with_capacity(n as usize);
+	
+	let between = Range::new(min, max); // from rand::distributions
+	let mut rng = rand::thread_rng();
+	
+	for _ in 0..n {
+		let val = between.ind_sample(&mut rng);
+		result.push(val);
+	}
+	
+	return result;
+}
+
+/* Simpler implmentation of `make_random_float_array()` */
+fn make_random_float_array_compact(n: usize, min: f64, max: f64) -> Vec<f64> {
+	let between = Range::new(min, max);
+	let mut rng = rand::thread_rng();
+	
+	(0..n).map(|x| between.ind_sample(&mut rng)).collect()
+}
+
+
+/* Compute average of list the standard way */
+fn calc_average_standard(values: &Vec<f64>) -> f64 {
+	let mut total = 0.0f64;
+	for val in values.iter() {
+		total += *val;
+	}
+	return (total / (values.len() as f64));
+}
+
+/* Compute average of list using the "online" way (to avoid overflows)
+ * https://stackoverflow.com/questions/28820904/how-to-efficiently-compute-average-on-the-fly-moving-average
+ */
+fn calc_average_online(values: &Vec<f64>) -> f64 {
+	let mut n = 1;
+	let mut avg = 0.0f64;
+	
+	for val in values.iter() {
+		avg += (val - avg) / (n as f64);
+		n += 1;
+	}
+	
+	return avg;
+}
+
+
+/* Test two ways of averaging numbers, by running a whole bunch of these tests */
+fn online_avg_test() {
+	let n = terminal_utils::get_int("Number of items in list:") as usize;
+	let repeats = terminal_utils::get_int("Number of repeats:") as usize;
+	
+	/* Run this experiment multiple times */
+	let mut success_count = 0;
+	
+	// TODO: Align output columns
+	println!("Testing Averaging Methods for List with n={0} items, {1} times...",
+	         n, repeats);
+	println!("==================================================================");
+	
+	
+	for i in 0..repeats {
+		let min = 1.0f64;
+		let max = 10.0f64;
+		
+		let values = make_random_float_array(n, min, max);
+		// let values = make_random_float_array(n, min, max);
+		
+		
+		let standard = calc_average_standard(&values);
+		let online = calc_average_online(&values);
+		
+		let values_match = standard == online;
+		let calc_error   = standard - online;
+		if values_match {
+			success_count += 1;
+		}
+		
+		// TODO: compact representation?
+		println!("\n  >> {0} | vs = {1:?}", i, &values);
+		
+		println!("    Standard = {0},  Online = {1}  | Match = {2} | Err = {3} \n",
+		         standard, online, values_match, calc_error);
+	}
+	
+	println!("==================================================================");
+	println!("\nSuccessful matches = {0} / {1}", success_count, repeats);
+	
+}
+
+
+/* *********************************************** */
+
 
 // Main entrypoint
 fn main() {
@@ -216,6 +314,7 @@ fn main() {
 		demo_runner::DemoProgramEntry { name: "move_semantics_test()".to_string(), cb: move_semantics_test },
 		demo_runner::DemoProgramEntry { name: "vec_test_1(x)".to_string(),         cb: vec_test_1_w },
 		demo_runner::DemoProgramEntry { name: "match_test()".to_string(),          cb: match_test },
+		demo_runner::DemoProgramEntry { name: "online_avg_test()".to_string(),     cb: online_avg_test },
 	];
 	
 	loop {
