@@ -208,36 +208,36 @@ fn match_test() {
 /* *********************************************** */
 
 /* Populate a list/vector with random floats */
-fn make_random_float_array(n: usize, min: f64, max: f64) -> Vec<f64> {
-	let mut result = Vec::with_capacity(n as usize);
-	
-	let between = Range::new(min, max); // from rand::distributions
-	let mut rng = rand::thread_rng();
-	
-	for _ in 0..n {
-		let val = between.ind_sample(&mut rng);
-		result.push(val);
-	}
-	
-	return result;
-}
+// fn make_random_float_array(n: usize, min: f64, max: f64) -> Vec<f64> {
+// 	let mut result = Vec::with_capacity(n as usize);
+//	
+// 	let between = Range::new(min, max); // from rand::distributions
+// 	let mut rng = rand::thread_rng();
+//	
+// 	for _ in 0..n {
+// 		let val = between.ind_sample(&mut rng);
+// 		result.push(val);
+// 	}
+//	
+// 	return result;
+// }
 
 /* Simpler implmentation of `make_random_float_array()` */
 fn make_random_float_array_compact(n: usize, min: f64, max: f64) -> Vec<f64> {
 	let between = Range::new(min, max);
 	let mut rng = rand::thread_rng();
 	
-	(0..n).map(|x| between.ind_sample(&mut rng)).collect()
+	(0..n).map(|_| between.ind_sample(&mut rng)).collect()
 }
 
 
 /* Compute average of list the standard way */
 fn calc_average_standard(values: &Vec<f64>) -> f64 {
-	let mut total = 0.0f64;
+	let mut total = 0.0_f64;
 	for val in values.iter() {
 		total += *val;
 	}
-	return (total / (values.len() as f64));
+	return total / (values.len() as f64);
 }
 
 /* Compute average of list using the "online" way (to avoid overflows)
@@ -245,7 +245,7 @@ fn calc_average_standard(values: &Vec<f64>) -> f64 {
  */
 fn calc_average_online(values: &Vec<f64>) -> f64 {
 	let mut n = 1;
-	let mut avg = 0.0f64;
+	let mut avg = 0.0_f64;
 	
 	for val in values.iter() {
 		avg += (val - avg) / (n as f64);
@@ -271,11 +271,11 @@ fn online_avg_test() {
 	
 	
 	for i in 0..repeats {
-		let min = 1.0f64;
-		let max = 10.0f64;
+		let min = 1.0_f64;
+		let max = 10.0_f64;
 		
-		let values = make_random_float_array(n, min, max);
 		// let values = make_random_float_array(n, min, max);
+		let values = make_random_float_array_compact(n, min, max);
 		
 		
 		let standard = calc_average_standard(&values);
@@ -292,6 +292,10 @@ fn online_avg_test() {
 		
 		println!("    Standard = {0},  Online = {1}  | Match = {2} | Err = {3} \n",
 		         standard, online, values_match, calc_error);
+		
+		if i < repeats - 1 {
+			println!("---------------------------------------------------------------");
+		}
 	}
 	
 	println!("==================================================================");
