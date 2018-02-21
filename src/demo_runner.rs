@@ -49,6 +49,7 @@ pub fn handle_command_input(table: &Vec<DemoProgramEntry>) {
 	match command.parse::<usize>() {
 		Ok(value) if (value > 0) && (value <= table.len()) => {
 			// We got a number, so treat it as a demo program index
+			println!(""); // print empty line to separate input from commands
 			let index = value - 1;
 			(table[index].cb)();
 		},
