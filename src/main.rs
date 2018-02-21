@@ -258,8 +258,19 @@ fn calc_average_online(values: &Vec<f64>) -> f64 {
 
 /* Test two ways of averaging numbers, by running a whole bunch of these tests */
 fn online_avg_test() {
-	let n = terminal_utils::get_int("Number of items in list:") as usize;
-	let repeats = terminal_utils::get_int("Number of repeats:") as usize;
+	let mut n = terminal_utils::get_int_optional("Number of items in list:", 5) as usize;
+	let mut repeats = terminal_utils::get_int_optional("Number of repeats:", 10) as usize;
+	
+	/* Sanity checks */
+	// XXX: Make these part of the constraints on get_int()
+	if n < 2 {
+		/* This is pointless otherwise */
+		n = 2;
+	}
+	if repeats < 2 {
+		/* This is pointless otherwise */
+		repeats = 2;
+	}
 	
 	/* Run this experiment multiple times */
 	let mut success_count = 0;
