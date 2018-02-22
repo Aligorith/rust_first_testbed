@@ -6,3 +6,4 @@ authors = ["Joshua Leung <aligorith@gmail.com>"]
 [dependencies]
 time = "0.1"
 rand = "0.4"
+indoc = "0.2"

@@ -317,7 +317,21 @@ fn online_avg_test() {
 
 /* *********************************************** */
 
+/* Test of printing multiline strings */
+fn multiline_tribute() {
+	let s = indoc!(
+	               "For those we lost on 22 February 2011 at 12:51pm (and in the chaotic aftermath)
+	                of the devasting 6.3 magnitude Christchurch Earthquake:
+	               
+	                    We will remember you always
+	                    RIP
+	                    
+	               -- 20180222 12:53pm
+	               ");
+	println!("{}", s);
+}
 
+/* *********************************************** */
 // Main entrypoint
 fn main() {
 	let table = vec![
@@ -330,6 +344,7 @@ fn main() {
 		demo_runner::DemoProgramEntry { name: "vec_test_1(x)".to_string(),         cb: vec_test_1_w },
 		demo_runner::DemoProgramEntry { name: "match_test()".to_string(),          cb: match_test },
 		demo_runner::DemoProgramEntry { name: "online_avg_test()".to_string(),     cb: online_avg_test },
+		demo_runner::DemoProgramEntry { name: "multiline_tribute()".to_string(),   cb: multiline_tribute },
 	];
 	
 	loop {
