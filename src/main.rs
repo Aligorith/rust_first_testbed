@@ -1,6 +1,8 @@
 extern crate time;
 extern crate rand;
+#[macro_use] extern crate indoc;
 
+use std::env;
 use std::thread;
 use std::time as std_time;
 use rand::distributions::{IndependentSample, Range};
@@ -332,6 +334,32 @@ fn multiline_tribute() {
 }
 
 /* *********************************************** */
+
+/* Enumerate the arguments passed to the program (skipping the program name)
+ * - This allows us to test both argument handling, slicing, and the enumerate iterator
+ */
+fn enumerate_args() {
+	//let args: Vec<String> = env::args().collect();
+	
+	if env::args().skip(1).peekable().peek() == None {
+		println!("No arguments found. Restart program and try again.");
+	}
+	else {
+		let args = env::args()          /* get the Arguments object - which is itself an iterator */
+						.skip(1)        /* skip the first n items (i.e. the program name) */
+						.enumerate();   /* enumerate lists the item order */
+		
+		println!("Args Are:");
+		for (i, item) in args {
+			println!("  [{0}] {1} = {2}", i, i + 1, &item);
+		}
+	}
+}
+
+
+/* *********************************************** */
+
+
 // Main entrypoint
 fn main() {
 	let table = vec![
@@ -345,6 +373,7 @@ fn main() {
 		demo_runner::DemoProgramEntry { name: "match_test()".to_string(),          cb: match_test },
 		demo_runner::DemoProgramEntry { name: "online_avg_test()".to_string(),     cb: online_avg_test },
 		demo_runner::DemoProgramEntry { name: "multiline_tribute()".to_string(),   cb: multiline_tribute },
+		demo_runner::DemoProgramEntry { name: "enumerate_args()".to_string(),      cb: enumerate_args },
 	];
 	
 	loop {
